@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Document</title>
+    <script
+      src="script.js"
+      defer
+    ></script>
+    <link
+      rel="stylesheet"
+      href="style.css"
+    />
+  </head>
+  <body>
+    <!-- Вкладки -->
+    <div class="tabs">
+      <div id="first__tab">Перша вкладка</div>
+      <div id="second__tab">Друга вкладка</div>
+    </div>
+    <!--Перший таб-->
+    <div class="date">
+      <div class="date__container">
+        <form class="date__form">
+          <div class="date__inputs">
+            <h3>Виберіть Початок дати</h3>
+            <input
+              type="date"
+              class="first-input"
+            />
+            <h3>Виберіть кінцеву дату</h3>
+            <input
+              type="date"
+              class="second-input"
+              disabled
+            />
+          </div>
+          <div class="date__options">
+            <div class="option__preset">
+              <select
+                name=""
+                id=""
+              >
+                <option value="">тиждень</option>
+                <option value="">місяць</option>
+              </select>
+            </div>
+            <div class="option__days">
+              <select
+                name=""
+                id=""
+              >
+                <option value="">Всі дні</option>
+                <option value="">Будні дні</option>
+                <option value="">Вихідні дні</option>
+              </select>
+            </div>
+            <div class="option__time">
+              <select
+                name=""
+                id=""
+              >
+                <option value="">Порахувати кількість днів</option>
+                <option value="">Порахувати кількість годин</option>
+                <option value="">Порахувати кількість хвилин</option>
+                <option value="">Порахувати кількість секунд</option>
+              </select>
+            </div>
+          </div>
+          <div
+            class="date__button"
+            type="submit"
+          >
+            <button>Розрахувати дату</button>
+          </div>
+          <div class="date__result">
+            <p>Результат:</p>
+          </div>
+        </form>
+      </div>
+    </div>
+    <!--Другий табs-->
+    <div class="countries">Країни</div>
+  </body>
+</html>

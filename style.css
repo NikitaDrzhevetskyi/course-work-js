@@ -1,0 +1,25 @@
+.tabs {
+  display: flex;
+  justify-content: space-around;
+}
+
+#first__tab,
+#second__tab {
+  background-color: gray;
+  padding: 10px 30px 10px 30px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 10px;
+}
+.countries {
+  display: none;
+}
+.date__inputs {
+  padding-bottom: 20px;
+}
+.date__options {
+  display: flex;
+}
+.date__button {
+  margin-top: 20px;
+}
