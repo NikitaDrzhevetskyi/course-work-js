@@ -8,7 +8,8 @@
     />
     <title>Document</title>
     <script
-      src="script.js"
+      type="module"
+      src="./js/main.js"
       defer
     ></script>
     <link
@@ -27,28 +28,25 @@
       <div class="date__container">
         <form class="date__form">
           <div class="date__inputs">
-            <h3>Виберіть Початок дати</h3>
+            <h2>Виберіть Початок дати</h2>
             <input
               type="date"
-              class="first-input"
+              class="start-date"
+              min="2023-11-02"
             />
-            <h3>Виберіть кінцеву дату</h3>
+            <h2>Виберіть кінцеву дату</h2>
             <input
               type="date"
-              class="second-input"
+              class="end-date"
               disabled
             />
           </div>
+          <div class="option__preset">
+            <h2>Оберіть пресет</h2>
+            <button class="preset__week">тиждень</button>
+            <button class="preset__month">місяць</button>
+          </div>
           <div class="date__options">
-            <div class="option__preset">
-              <select
-                name=""
-                id=""
-              >
-                <option value="">тиждень</option>
-                <option value="">місяць</option>
-              </select>
-            </div>
             <div class="option__days">
               <select
                 name=""
@@ -62,28 +60,34 @@
             <div class="option__time">
               <select
                 name=""
-                id=""
+                id="time__dimension"
               >
-                <option value="">Порахувати кількість днів</option>
-                <option value="">Порахувати кількість годин</option>
-                <option value="">Порахувати кількість хвилин</option>
-                <option value="">Порахувати кількість секунд</option>
+                <option value="days">Порахувати кількість днів</option>
+                <option value="hours">Порахувати кількість годин</option>
+                <option value="minutes">Порахувати кількість хвилин</option>
+                <option value="seconds">Порахувати кількість секунд</option>
               </select>
             </div>
           </div>
-          <div
-            class="date__button"
-            type="submit"
-          >
-            <button>Розрахувати дату</button>
+          <div>
+            <button
+              class="date__button"
+              type="submit"
+            >
+              Розрахувати дату
+            </button>
           </div>
           <div class="date__result">
-            <p>Результат:</p>
           </div>
         </form>
       </div>
     </div>
     <!--Другий табs-->
-    <div class="countries">Країни</div>
+    <div
+      class="countries"
+      hidden
+    >
+      Країни
+    </div>
   </body>
 </html>

@@ -11,15 +11,14 @@
   cursor: pointer;
   border-radius: 10px;
 }
-.countries {
-  display: none;
-}
-.date__inputs {
-  padding-bottom: 20px;
-}
+/*Css for Date Start*/
 .date__options {
   display: flex;
+}
+.option__preset{
+	margin-bottom: 20px;
 }
 .date__button {
   margin-top: 20px;
 }
+/*Css for Date End*/
