@@ -1,63 +1,93 @@
 'use strict'
+
 import { showElement, hideElement } from './tab.js'
+
 // var tabs
 let firstTab = document.getElementById('first__tab')
 let secondTab = document.getElementById('second__tab')
 let dateTab = document.querySelector('.date')
-let coutriesTab = document.querySelector('.countries')
+let countriesTab = document.querySelector('.countries')
 //var dates
 let endDateInput = document.querySelector('.end-date')
 let startDateInput = document.querySelector('.start-date')
 //var events
 let dateForm = document.querySelector('.date__form')
 let dateInputs = document.querySelector('.date__inputs')
-//
+//var options (time, days)
 let timeDimension = document.getElementById('time__dimension')
-let dateResult = document.querySelector('.date__result')
+let daysDimension = document.getElementById('days__dimension')
 //preset
 let weekPreset = document.querySelector('.preset__week')
 let monthPreset = document.querySelector('.preset__month')
+//days option
+let optionDays = document.querySelector('.option__days')
+//result
+let dateResult = document.querySelector('.date__result')
 
+// Functions
 const handleStartDate = () => {
   endDateInput.removeAttribute('disabled')
   endDateInput.min = startDateInput.value
-  startDateInput.max = endDateInput.value
 }
 
-const getTimeBetweenDates = () => {
-  let dateStartTimestamp = Date.parse(startDateInput.value)
-  let dateEndTimestamp = Date.parse(endDateInput.value)
+const getTimeBetweenDates = (
+  startDate,
+  endDate,
+  dimensionTime,
+  dimensionDate
+) => {
+  let dateStartTimestamp = Date.parse(startDate)
+  let dateEndTimestamp = Date.parse(endDate)
 
   let timeDifference = dateEndTimestamp - dateStartTimestamp
-  let dimension = timeDimension.value
-  switch (dimension) {
+  let resultOfTime = 0
+
+  switch (dimensionTime) {
     case 'seconds':
-      return `${timeDifference / 1000} секунд`
+      resultOfTime = `${timeDifference / 1000} seconds`
     case 'minutes':
-      return `${timeDifference / 60000} хвилин`
+      resultOfTime = `${timeDifference / 60000} minutes`
     case 'hours':
-      return `${timeDifference / 3600000} годин`
+      resultOfTime = `${timeDifference / 3600000} hours`
     case 'days':
-      return `${timeDifference / 86400000} днів`
+      resultOfTime = `${timeDifference / 86400000} days`
     default:
-      return 'Invalid dimension'
+      'Invalid dimension'
   }
+  let resultOfDate = 0
+  switch (dimensionDate) {
+    case 'all-days':
+      resultOfDate = 1
+      break
+    case 'working-days':
+      resultOfDate = 2
+      break
+    case 'weekends':
+      resultOfDate = 3
+      break
+  }
+  return `${resultOfTime} ${resultOfDate}`
 }
 
-const addPrecet = (days) => {
+const addPreset = (days) => {
   const currentDate = new Date()
+
   if (!startDateInput.value) {
     startDateInput.value = currentDate.toISOString().split('T')[0]
     endDateInput.removeAttribute('disabled')
+    endDateInput.value = new Date(
+      currentDate.getTime() + days * 24 * 60 * 60 * 1000
+    )
+      .toISOString()
+      .split('T')[0]
+  } else {
+    const existingStartDate = new Date(startDateInput.value)
+    existingStartDate.setDate(existingStartDate.getDate() + days)
+    endDateInput.value = existingStartDate.toISOString().split('T')[0]
   }
-
-  const existingStartDate = new Date(startDateInput.value)
-  existingStartDate.setDate(existingStartDate.getDate() + days)
-  endDateInput.value = existingStartDate.toISOString().split('T')[0]
 }
-
-const addWeekPrecet = () => addPrecet(7)
-const addMonthPrecet = () => addPrecet(30)
+const addWeekPreset = () => addPreset(7)
+const addMonthPreset = () => addPreset(30)
 
 const calculateDate = (event) => {
   event.preventDefault()
@@ -65,22 +95,35 @@ const calculateDate = (event) => {
   if (startDateInput.value === '' || endDateInput.value === '') {
     return
   }
-  const result = getTimeBetweenDates()
+  const result = getTimeBetweenDates(
+    startDateInput.value,
+    endDateInput.value,
+    timeDimension.value,
+    daysDimension.value
+  )
   dateResult.innerHTML = `Результат: ${result}`
 }
 
-//events
-dateInputs.addEventListener('change', handleStartDate)
+// Event listeners
+startDateInput.addEventListener('change', handleStartDate)
+endDateInput.addEventListener('change', () => {
+  startDateInput.max = endDateInput.value
+})
+
+//result
 dateForm.addEventListener('submit', calculateDate)
-//precets
-weekPreset.addEventListener('click', addWeekPrecet)
-monthPreset.addEventListener('click', addMonthPrecet)
-//events for tab
+
+// Presets
+weekPreset.addEventListener('click', addWeekPreset)
+monthPreset.addEventListener('click', addMonthPreset)
+
+// Events for tab
 firstTab.addEventListener('click', () => {
   hideElement(dateTab)
-  showElement(coutriesTab)
+  showElement(countriesTab)
 })
+
 secondTab.addEventListener('click', () => {
-  hideElement(coutriesTab)
+  hideElement(countriesTab)
   showElement(dateTab)
 })
