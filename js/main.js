@@ -1,13 +1,16 @@
 'use strict'
-
-import { showElement, hideElement } from './tab.js'
+import {
+  getResultsFromLocalStorage,
+  saveResultToLocalStorage,
+} from './date-module/storage.js'
+import { showElement, hideElement } from './date-module/tab.js'
+import { isWeekday, isWeekend } from './date-module/optionDays.js'
 
 //var tabs
 let firstTab = document.getElementById('first__tab')
 let secondTab = document.getElementById('second__tab')
 let dateTab = document.querySelector('.date')
 let countriesTab = document.querySelector('.countries')
-
 //var dates
 let endDateInput = document.querySelector('.end-date')
 let startDateInput = document.querySelector('.start-date')
@@ -23,6 +26,66 @@ let daysDimension = document.getElementById('days__dimension')
 //preset
 let weekPreset = document.querySelector('.preset__week')
 let monthPreset = document.querySelector('.preset__month')
+
+const displayDateResult = (timeDifference) => {
+  switch (timeDimension.value) {
+    case 'seconds':
+      timeDifference = `${timeDifference / 1000}`
+      break
+    case 'minutes':
+      timeDifference = `${timeDifference / 60000}`
+      break
+    case 'hours':
+      timeDifference = `${timeDifference / 3600000}`
+      break
+    case 'days':
+      timeDifference = `${timeDifference / 86400000}`
+      break
+    default:
+      return 'Invalid dimension'
+  }
+
+  dateResult.innerHTML = `Результат: ${timeDifference} ${timeDimension.value}`
+
+  saveResultToLocalStorage(
+    startDateInput.value,
+    endDateInput.value,
+    timeDifference,
+    timeDimension.value
+  )
+
+  displayStorageResults()
+}
+
+const displayStorageResults = () => {
+  const results = getResultsFromLocalStorage()
+  const resultsContainer = document.querySelector('.stored-results')
+
+  // Clear previous results
+  resultsContainer.innerHTML = ''
+
+  // Display the last 10 results
+  results.forEach((result) => {
+    const resultElement = document.createElement('div')
+    resultElement.innerHTML = `<table>
+  <tr>
+    <th>Початкова дата:</th>
+    <th>Кінцева дата</th>
+    <th>Результат</th>
+  </tr>
+  <tr>
+    <td>${result.startDate}</td>
+    <td>${result.endDate}</td>
+    <td>${result.result} ${result.dimension}</td>
+  </tr>
+  </table>`
+
+    resultsContainer.appendChild(resultElement)
+  })
+}
+
+// Call the displayStoredResults function when the page loads
+document.addEventListener('DOMContentLoaded', displayStorageResults)
 
 //Functions
 const handleStartDate = () => {
@@ -59,7 +122,7 @@ const calculateDate = (event) => {
   }
 
   let timeDifference = calculateTimeDifference()
-  displayResult(timeDifference)
+  displayDateResult(timeDifference)
 }
 
 const calculateTimeDifference = () => {
@@ -107,38 +170,6 @@ const calculateDefaultDifference = (startDate, endDate) => {
   return endDate - startDate
 }
 
-const isWeekday = (date) => {
-  const dayOfWeek = date.getDay()
-  return dayOfWeek >= 1 && dayOfWeek <= 5
-}
-
-const isWeekend = (date) => {
-  const dayOfWeek = date.getDay()
-  return dayOfWeek === 0 || dayOfWeek === 6
-}
-
-const displayResult = (timeDifference) => {
-  switch (timeDimension.value) {
-    case 'seconds':
-      timeDifference = `${timeDifference / 1000} ${timeDimension.value}`
-      break
-    case 'minutes':
-      timeDifference = `${timeDifference / 60000} ${timeDimension.value}`
-      break
-    case 'hours':
-      timeDifference = `${timeDifference / 3600000} ${timeDimension.value}`
-      break
-    case 'days':
-      timeDifference = `${timeDifference / 86400000} ${timeDimension.value}`
-      break
-    default:
-      return 'Invalid dimension'
-  }
-
-  dateResult.innerHTML = `Результат: ${timeDifference}`
-}
-
-// Event listeners
 startDateInput.addEventListener('change', handleStartDate)
 endDateInput.addEventListener('change', () => {
   startDateInput.max = endDateInput.value
