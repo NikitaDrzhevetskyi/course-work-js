@@ -2,15 +2,15 @@
 import {
   getResultsFromLocalStorage,
   saveResultToLocalStorage,
-} from './date-module/storage.js'
-import { showElement, hideElement } from './date-module/tab.js'
-import { isWeekday, isWeekend } from './date-module/optionDays.js'
+} from './storage.js'
+import { showElement, hideElement } from './tab.js'
 
 //var tabs
 let firstTab = document.getElementById('first__tab')
 let secondTab = document.getElementById('second__tab')
 let dateTab = document.querySelector('.date')
 let countriesTab = document.querySelector('.countries')
+
 //var dates
 let endDateInput = document.querySelector('.end-date')
 let startDateInput = document.querySelector('.start-date')
@@ -168,6 +168,15 @@ const calculateWeekendsDifference = (startDate, endDate) => {
 
 const calculateDefaultDifference = (startDate, endDate) => {
   return endDate - startDate
+}
+
+const isWeekday = (date) => {
+  return !isWeekend(date)
+}
+
+const isWeekend = (date) => {
+  const dayOfWeek = date.getDay()
+  return dayOfWeek === 0 || dayOfWeek === 6
 }
 
 startDateInput.addEventListener('change', handleStartDate)
