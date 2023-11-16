@@ -32,7 +32,6 @@
             <input
               type="date"
               class="start-date"
-              min="2023-11-02"
             />
             <h2>Виберіть кінцеву дату</h2>
             <input
@@ -90,17 +89,154 @@
           <div class="date__result"></div>
         </form>
       </div>
-      <div class="stored-results"></div>
+      <div class="stored-results">
+        <table>
+          <thead>
+            <tr>
+              <th>Початкова дата</th>
+              <th>Кінцева дата</th>
+              <th>Результат</th>
+            </tr>
+          </thead>
+          <tbody id="results-body"></tbody>
+        </table>
+      </div>
     </div>
-    <!--Другий табs-->
+    <!--Другий таб-->
     <div
       class="countries"
       hidden
     >
-      <div class="countries__container">
-        <div id="countries__dimension">Виберіть країну</div>
-        <div id="year__dimension">Виберіть рік</div>
+      <div>
+        <label for="countries__select">Вибір країни:</label>
+        <select id="countries__select">
+          <option value="">Оберіть країну</option>
+        </select>
       </div>
+
+      <div>
+        <label for="year__select">Вибір року:</label>
+        <select id="year__select">
+          <option value="">Виберіть рік</option>
+        </select>
+      </div>
+
+      <button id="getHolidaysButton">Отримати свята</button>
+
+      <table id="holidays-table">
+        <thead>
+          <tr>
+            <th id="sort-holidays">Дата</th>
+            <th>Назва свята</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div id="error-message"></div>
+
+      <script>
+        const API_KEY = 'hWZg73Xb3uc4vy7vW8AqYgBGclWaLdjJ'
+        const API_URL = 'https://calendarific.com/api/v2/'
+
+        const countriesSelect = document.getElementById('countries__select')
+        const yearSelect = document.getElementById('year__select')
+        const holidaysTableBody = document.querySelector('#holidays-table tbody')
+        const errorMessageContainer = document.getElementById('error-message')
+        const sortDateButton = document.getElementById('sort-holidays')
+        const getHolidaysButton = document.getElementById('getHolidaysButton')
+
+        async function getCountries() {
+          try {
+            const response = await fetch(
+              `${API_URL}countries?api_key=${API_KEY}`
+            )
+            const data = await response.json()
+            return data.response.countries
+          } catch (error) {
+            throw error
+          }
+        }
+
+        async function getHolidays(country, year) {
+          try {
+            const response = await fetch(
+              `${API_URL}holidays?api_key=${API_KEY}&country=${country}&year=${year}`
+            )
+            const data = await response.json()
+            return data.response.holidays
+          } catch (error) {
+            throw error
+          }
+        }
+        async function populateCountriesDropdown() {
+          try {
+            const countries = await getCountries()
+            countries.forEach((country) => {
+              let countryOption = document.createElement('option')
+              countryOption.textContent = country.country_name
+              countryOption.value = country['iso-3166']
+              countriesSelect.append(countryOption)
+            })
+          } catch (error) {
+            displayErrorMessage('Не вдалося отримати країни')
+          }
+        }
+
+        function populateYearsDropdown() {
+          for (let year = 2001; year <= 2049; year++) {
+            const option = document.createElement('option')
+            option.value = year
+            option.text = year
+            yearSelect.add(option)
+          }
+        }
+
+        async function getAndDisplayHolidays() {
+          const selectedCountry = countriesSelect.value
+          const selectedYear = yearSelect.value
+
+          if (!selectedCountry || !selectedYear) {
+            displayErrorMessage('Оберіть країну та рік!')
+            return
+          }
+
+          holidaysTableBody.innerHTML = ''
+
+          try {
+            const holidays = await getHolidays(selectedCountry, selectedYear)
+            displayHolidays(holidays)
+          } catch (error) {
+            displayErrorMessage('Не вдалося отримати свята.')
+          }
+        }
+
+        function displayHolidays(holidays) {
+          holidays.forEach((holiday) => {
+            const row = holidaysTableBody.insertRow()
+            const dateCell = row.insertCell(0)
+            const nameCell = row.insertCell(1)
+
+            dateCell.textContent =
+              holiday.date.iso || holiday.date.date || holiday.date
+            nameCell.textContent = holiday.name
+          })
+        }
+
+        function displayErrorMessage(message) {
+          errorMessageContainer.textContent = message
+          errorMessageContainer.style.display = 'block'
+        }
+        function sortHolidays() {}
+
+        document.addEventListener('DOMContentLoaded', async () => {
+          await populateCountriesDropdown()
+          populateYearsDropdown()
+
+          getHolidaysButton.addEventListener('click', async () => {
+            await getAndDisplayHolidays()
+          })
+        })
+      </script>
     </div>
   </body>
 </html>

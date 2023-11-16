@@ -27,6 +27,10 @@ let daysDimension = document.getElementById('days__dimension')
 let weekPreset = document.querySelector('.preset__week')
 let monthPreset = document.querySelector('.preset__month')
 
+//tab2
+const countrySelect = document.getElementById('countries__select')
+
+//show result of Date
 const displayDateResult = (timeDifference) => {
   switch (timeDimension.value) {
     case 'seconds':
@@ -57,42 +61,36 @@ const displayDateResult = (timeDifference) => {
   displayStorageResults()
 }
 
+//show result in storage
 const displayStorageResults = () => {
   const results = getResultsFromLocalStorage()
-  const resultsContainer = document.querySelector('.stored-results')
+  const resultsBody = document.getElementById('results-body')
 
   // Clear previous results
-  resultsContainer.innerHTML = ''
+  resultsBody.innerHTML = ''
 
   // Display the last 10 results
   results.forEach((result) => {
-    const resultElement = document.createElement('div')
-    resultElement.innerHTML = `<table>
-  <tr>
-    <th>Початкова дата:</th>
-    <th>Кінцева дата</th>
-    <th>Результат</th>
-  </tr>
-  <tr>
-    <td>${result.startDate}</td>
-    <td>${result.endDate}</td>
-    <td>${result.result} ${result.dimension}</td>
-  </tr>
-  </table>`
+    const row = document.createElement('tr')
+    row.innerHTML = `
+		<td>${result.startDate}</td>
+		<td>${result.endDate}</td>
+		<td>${result.result} ${result.dimension}</td>
+		`
 
-    resultsContainer.appendChild(resultElement)
+    resultsBody.appendChild(row)
   })
 }
 
 // Call the displayStoredResults function when the page loads
 document.addEventListener('DOMContentLoaded', displayStorageResults)
 
-//Functions
 const handleStartDate = () => {
   endDateInput.removeAttribute('disabled')
   endDateInput.min = startDateInput.value
 }
 
+//Calculate presets
 const addPreset = (days) => {
   const currentDate = new Date()
 
@@ -125,6 +123,7 @@ const calculateDate = (event) => {
   displayDateResult(timeDifference)
 }
 
+//Calculations of option days
 const calculateTimeDifference = () => {
   const startDate = new Date(startDateInput.value)
   const endDate = new Date(endDateInput.value)
@@ -174,10 +173,9 @@ startDateInput.addEventListener('change', handleStartDate)
 endDateInput.addEventListener('change', () => {
   startDateInput.max = endDateInput.value
 })
-
 dateForm.addEventListener('submit', calculateDate)
 
-// Events for tab
+// Events for presets
 weekPreset.addEventListener('click', addWeekPreset)
 monthPreset.addEventListener('click', addMonthPreset)
 
@@ -191,3 +189,4 @@ secondTab.addEventListener('click', () => {
   hideElement(countriesTab)
   showElement(dateTab)
 })
+

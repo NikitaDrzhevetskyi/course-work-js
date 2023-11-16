@@ -1,5 +1,3 @@
-
-
 export function showElement(event) {
   event.hidden = true
 }
