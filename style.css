@@ -145,7 +145,7 @@ body {
   width: 200px;
 }
 
-.countries button {
+.countries button{
   background-color: #4caf50;
   color: white;
   padding: 10px 15px;
@@ -154,7 +154,7 @@ body {
   cursor: pointer;
 }
 
-.countries button:hover {
+.countries button .getHolidaysButton:hover {
   background-color: #45a049;
 }
 
