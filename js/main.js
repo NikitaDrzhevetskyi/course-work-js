@@ -82,8 +82,6 @@ const displayStorageResults = () => {
   })
 }
 
-// Call the displayStoredResults function when the page loads
-document.addEventListener('DOMContentLoaded', displayStorageResults)
 
 const handleStartDate = () => {
   endDateInput.removeAttribute('disabled')
@@ -92,86 +90,86 @@ const handleStartDate = () => {
 
 //Calculate presets
 const addPreset = (days) => {
-  const currentDate = new Date()
-
-  if (!startDateInput.value) {
-    startDateInput.value = currentDate.toISOString().split('T')[0]
-    endDateInput.removeAttribute('disabled')
-    endDateInput.value = new Date(
-      currentDate.getTime() + days * 24 * 60 * 60 * 1000
-    )
-      .toISOString()
-      .split('T')[0]
-  } else {
-    const existingStartDate = new Date(startDateInput.value)
+	const currentDate = new Date()
+	
+	if (!startDateInput.value) {
+		startDateInput.value = currentDate.toISOString().split('T')[0]
+		endDateInput.removeAttribute('disabled')
+		endDateInput.value = new Date(
+			currentDate.getTime() + days * 24 * 60 * 60 * 1000
+			)
+			.toISOString()
+			.split('T')[0]
+		} else {
+			const existingStartDate = new Date(startDateInput.value)
     existingStartDate.setDate(existingStartDate.getDate() + days)
     endDateInput.value = existingStartDate.toISOString().split('T')[0]
-  }
+}
 }
 
 const addWeekPreset = () => addPreset(7)
 const addMonthPreset = () => addPreset(30)
 
 const calculateDate = (event) => {
-  event.preventDefault()
-
-  if (startDateInput.value === '' || endDateInput.value === '') {
-    return
-  }
-
-  let timeDifference = calculateTimeDifference()
-  displayDateResult(timeDifference)
+	event.preventDefault()
+	
+	if (startDateInput.value === '' || endDateInput.value === '') {
+		return
+	}
+	
+	let timeDifference = calculateTimeDifference()
+	displayDateResult(timeDifference)
 }
 
 //Calculations of option days
 const calculateTimeDifference = () => {
-  const startDate = new Date(startDateInput.value)
-  const endDate = new Date(endDateInput.value)
-
-  if (daysDimension.value === 'working-days') {
-    return calculateWorkingDaysDifference(startDate, endDate)
-  } else if (daysDimension.value === 'weekends') {
-    return calculateWeekendsDifference(startDate, endDate)
-  }
-
-  return calculateDefaultDifference(startDate, endDate)
+	const startDate = new Date(startDateInput.value)
+	const endDate = new Date(endDateInput.value)
+	
+	if (daysDimension.value === 'working-days') {
+		return calculateWorkingDaysDifference(startDate, endDate)
+	} else if (daysDimension.value === 'weekends') {
+		return calculateWeekendsDifference(startDate, endDate)
+	}
+	
+	return calculateDefaultDifference(startDate, endDate)
 }
 
 const calculateWorkingDaysDifference = (startDate, endDate) => {
-  let workingDays = 0
-  let currentDate = new Date(startDate)
-
+	let workingDays = 0
+	let currentDate = new Date(startDate)
+	
   while (currentDate <= endDate) {
-    if (isWeekday(currentDate)) {
-      workingDays++
-    }
-    currentDate.setDate(currentDate.getDate() + 1)
-  }
-
-  return workingDays * 24 * 60 * 60 * 1000
+	  if (isWeekday(currentDate)) {
+		  workingDays++
+		}
+		currentDate.setDate(currentDate.getDate() + 1)
+	}
+	
+	return workingDays * 24 * 60 * 60 * 1000
 }
 
 const calculateWeekendsDifference = (startDate, endDate) => {
-  let weekends = 0
-  let currentDate = new Date(startDate)
-
-  while (currentDate < endDate) {
-    if (isWeekend(currentDate)) {
-      weekends++
-    }
-    currentDate.setDate(currentDate.getDate() + 1)
-  }
-
-  return weekends * 24 * 60 * 60 * 1000
+	let weekends = 0
+	let currentDate = new Date(startDate)
+	
+	while (currentDate < endDate) {
+		if (isWeekend(currentDate)) {
+			weekends++
+		}
+		currentDate.setDate(currentDate.getDate() + 1)
+	}
+	
+	return weekends * 24 * 60 * 60 * 1000
 }
 
 const calculateDefaultDifference = (startDate, endDate) => {
-  return endDate - startDate
+	return endDate - startDate
 }
 
 startDateInput.addEventListener('change', handleStartDate)
 endDateInput.addEventListener('change', () => {
-  startDateInput.max = endDateInput.value
+	startDateInput.max = endDateInput.value
 })
 dateForm.addEventListener('submit', calculateDate)
 
@@ -181,12 +179,14 @@ monthPreset.addEventListener('click', addMonthPreset)
 
 // Events for tab
 firstTab.addEventListener('click', () => {
-  hideElement(dateTab)
-  showElement(countriesTab)
+	hideElement(dateTab)
+	showElement(countriesTab)
 })
 
 secondTab.addEventListener('click', () => {
-  hideElement(countriesTab)
-  showElement(dateTab)
+	hideElement(countriesTab)
+	showElement(dateTab)
 })
 
+// Call the displayStoredResults function when the page loads
+document.addEventListener('DOMContentLoaded', displayStorageResults)

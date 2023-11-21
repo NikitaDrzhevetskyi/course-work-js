@@ -20,20 +20,20 @@
   <body>
     <!-- Вкладки -->
     <div class="tabs">
-      <div id="first__tab">Перша вкладка</div>
-      <div id="second__tab">Друга вкладка</div>
+      <div id="first__tab">Calculate Date</div>
+      <div id="second__tab">Get Holidays</div>
     </div>
     <!--Перший таб-->
     <div class="date">
       <div class="date__container">
         <form class="date__form">
           <div class="date__inputs">
-            <h2>Виберіть Початок дати</h2>
+            <h2>Choose Start date</h2>
             <input
               type="date"
               class="start-date"
             />
-            <h2>Виберіть кінцеву дату</h2>
+            <h2>Choose End date</h2>
             <input
               type="date"
               class="end-date"
@@ -41,18 +41,18 @@
             />
           </div>
           <div class="option__preset">
-            <h2>Оберіть пресет</h2>
+            <h2>Choose a preset</h2>
             <button
               class="preset__week"
               type="button"
             >
-              тиждень
+              week
             </button>
             <button
               class="preset__month"
               type="button"
             >
-              місяць
+              month
             </button>
           </div>
           <div class="date__options">
@@ -61,9 +61,9 @@
                 name=""
                 id="days__dimension"
               >
-                <option value="all-days">Всі дні</option>
-                <option value="working-days">Будні дні</option>
-                <option value="weekends">Вихідні дні</option>
+                <option value="all-days">All days</option>
+                <option value="working-days">Weekdays</option>
+                <option value="weekends">Weekends</option>
               </select>
             </div>
             <div class="option__time">
@@ -71,10 +71,10 @@
                 name=""
                 id="time__dimension"
               >
-                <option value="days">Порахувати кількість днів</option>
-                <option value="hours">Порахувати кількість годин</option>
-                <option value="minutes">Порахувати кількість хвилин</option>
-                <option value="seconds">Порахувати кількість секунд</option>
+                <option value="days">Calculate the number of days</option>
+                <option value="hours">Calculate the number of hours</option>
+                <option value="minutes">Calculate the number of minutes</option>
+                <option value="seconds">Calculate the number of seconds</option>
               </select>
             </div>
           </div>
@@ -83,7 +83,7 @@
               class="date__button"
               type="submit"
             >
-              Розрахувати дату
+              Calculate the date
             </button>
           </div>
           <div class="date__result"></div>
@@ -93,9 +93,9 @@
         <table>
           <thead>
             <tr>
-              <th>Початкова дата</th>
-              <th>Кінцева дата</th>
-              <th>Результат</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Result</th>
             </tr>
           </thead>
           <tbody id="results-body"></tbody>
@@ -107,33 +107,31 @@
       class="countries"
       hidden
     >
-      <div>
-        <label for="countries__select">Вибір країни:</label>
-        <select id="countries__select">
-          <option value="">Оберіть країну</option>
-        </select>
+      <div class="option__dates">
+        <div>
+          <label for="countries__select">Choosing the country:</label>
+          <select id="countries__select">
+            <option value="">Choose a country</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="year__select">Choosing the year</label>
+          <select id="year__select">
+            <option value="">Choose a year</option>
+          </select>
+        </div>
       </div>
 
-      <div>
-        <label for="year__select">Вибір року:</label>
-        <select id="year__select">
-          <option value="">Виберіть рік</option>
-        </select>
-      </div>
-
-      <button class="holiday__button">Отримати свята</button>
+      <button class="holiday__button">Get Holidays</button>
 
       <table id="holidays-table">
         <thead>
           <tr>
-            <th>Дата</th>
-            <th>Назва свята</th>
+            <th>Date</th>
+            <th>Name Holiday</th>
             <th>
-              <button
-                id="sort-holidays"
-              >
-                Сортувати
-              </button>
+              <button id="sort-holidays">Sort</button>
             </th>
           </tr>
         </thead>
@@ -142,7 +140,7 @@
       <div id="error-message"></div>
 
       <script>
-        const API_KEY = 'SWHjQHpfQZSjn5JXbaF5FtgWnm0dEMJl'
+        const API_KEY = 'NB32rWoHbmHF87yn0SdEGSLhiLQfxib7	'
         const API_URL = 'https://calendarific.com/api/v2/'
 
         const countriesSelect = document.getElementById('countries__select')
@@ -177,6 +175,7 @@
             throw error
           }
         }
+
         async function populateCountriesDropdown() {
           try {
             const countries = await getCountries()
@@ -187,7 +186,7 @@
               countriesSelect.append(countryOption)
             })
           } catch (error) {
-            displayErrorMessage('Не вдалося отримати країни')
+            displayErrorMessage('Error! Unable to get countries.')
           }
         }
 
@@ -205,9 +204,15 @@
           const selectedYear = yearSelect.value
 
           if (!selectedCountry || !selectedYear) {
-            displayErrorMessage('Оберіть країну та рік!')
+            displayErrorMessage('Select country and year!')
+            // Clear holidays data
+            holidaysTableBody.innerHTML = ''
             return
           }
+
+          // Reset error message container
+          errorMessageContainer.textContent = ''
+          errorMessageContainer.style.display = 'none'
 
           holidaysTableBody.innerHTML = ''
 
@@ -215,7 +220,7 @@
             const holidays = await getHolidays(selectedCountry, selectedYear)
             displayHolidays(holidays)
           } catch (error) {
-            displayErrorMessage('Не вдалося отримати свята.')
+            displayErrorMessage('Error! Unable to get holidays.')
           }
         }
 
@@ -234,7 +239,9 @@
         function displayErrorMessage(message) {
           errorMessageContainer.textContent = message
           errorMessageContainer.style.display = 'block'
+
         }
+
         let ascendingOrder = true
 
         function sortHolidays() {

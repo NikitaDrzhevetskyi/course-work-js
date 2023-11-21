@@ -70,12 +70,16 @@ body {
 }
 
 .date__button {
-  background-color: gray;
+  background-color: #3498db;
   color: white;
   padding: 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: 0.2s;
+}
+.date__button:hover {
+  background-color: #297fb8;
 }
 
 .stored-results table {
@@ -126,6 +130,7 @@ body {
 /* countries css Start*/
 .countries {
   margin-top: 20px;
+  text-align: center;
 }
 
 .countries__container {
@@ -145,8 +150,7 @@ body {
   width: 200px;
 }
 
-.countries button{
-  background-color: #4caf50;
+.countries button {
   color: white;
   padding: 10px 15px;
   font-size: 16px;
@@ -154,24 +158,63 @@ body {
   cursor: pointer;
 }
 
-.countries button .getHolidaysButton:hover {
-  background-color: #45a049;
+.holiday__button {
+  background-color: #3498db;
+  color: #fff;
+  padding: 12px 18px;
+  font-size: 16px;
+  border: 1px solid #297fb8;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.holiday__button:hover {
+  background-color: #297fb8;
+}
+
+#sort-holidays {
+  background-color: rgb(255, 255, 135);
+  color: black;
+  padding: 12px 18px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#sort-holidays:hover {
+  background-color: #ffd700;
 }
 
 #holidays-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  text-align: center;
 }
 
 #holidays-table th,
 #holidays-table td {
   border: 1px solid #ddd;
   padding: 8px;
-  text-align: left;
+  text-align: center;
 }
 
 #holidays-table th {
   background-color: rgb(221, 215, 215);
 }
+
+#error-message {
+  display: none;
+  color: #d9534f;
+  background-color: #f2dede; 
+  border: 1px solid #d9534f; 
+  padding: 10px; 
+  border-radius: 5px; 
+  margin-top: 10px; 
+  text-align: center;
+  animation: fadeOut 3s ease-in-out;
+}
+
 /* countries css End*/
