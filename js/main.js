@@ -4,7 +4,13 @@ import {
   getResultsFromLocalStorage,
   saveResultToLocalStorage,
 } from "./storage.js";
-import { isWeekday, isWeekend } from "./date.js";
+import {
+  isWeekday,
+  isWeekend,
+  calculateWorkingDaysDifference,
+  calculateWeekendsDifference,
+  calculateDefaultDifference,
+} from "./date.js";
 
 //var dates
 let endDateInput = document.querySelector(".end-date");
@@ -126,38 +132,6 @@ const calculateTimeDifference = () => {
   }
 
   return calculateDefaultDifference(startDate, endDate);
-};
-
-const calculateWorkingDaysDifference = (startDate, endDate) => {
-  let workingDays = 0;
-  let currentDate = new Date(startDate);
-
-  while (currentDate <= endDate) {
-    if (isWeekday(currentDate)) {
-      workingDays++;
-    }
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
-
-  return workingDays * 24 * 60 * 60 * 1000;
-};
-
-const calculateWeekendsDifference = (startDate, endDate) => {
-  let weekends = 0;
-  let currentDate = new Date(startDate);
-
-  while (currentDate < endDate) {
-    if (isWeekend(currentDate)) {
-      weekends++;
-    }
-    currentDate.setDate(currentDate.getDate() + 1);
-  }
-
-  return weekends * 24 * 60 * 60 * 1000;
-};
-
-const calculateDefaultDifference = (startDate, endDate) => {
-  return endDate - startDate;
 };
 
 const handleStartDate = () => {

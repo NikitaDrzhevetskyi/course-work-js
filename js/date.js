@@ -1,5 +1,3 @@
-import { saveResultToLocalStorage } from "./storage.js";
-
 export const isWeekday = (date) => {
   return !isWeekend(date);
 };
@@ -9,32 +7,34 @@ export const isWeekend = (date) => {
   return dayOfWeek === 0 || dayOfWeek === 6;
 };
 
-export const displayDateResult = (timeDifference) => {
-  switch (timeDimension.value) {
-    case "seconds":
-      timeDifference = `${timeDifference / 1000}`;
-      break;
-    case "minutes":
-      timeDifference = `${timeDifference / 60000}`;
-      break;
-    case "hours":
-      timeDifference = `${timeDifference / 3600000}`;
-      break;
-    case "days":
-      timeDifference = `${timeDifference / 86400000}`;
-      break;
-    default:
-      return "Invalid dimension";
+export const calculateWorkingDaysDifference = (startDate, endDate) => {
+  let workingDays = 0;
+  let currentDate = new Date(startDate);
+
+  while (currentDate <= endDate) {
+    if (isWeekday(currentDate)) {
+      workingDays++;
+    }
+    currentDate.setDate(currentDate.getDate() + 1);
   }
 
-  dateResult.innerHTML = `Результат: ${timeDifference} ${timeDimension.value}`;
+  return workingDays * 24 * 60 * 60 * 1000;
+};
 
-  saveResultToLocalStorage(
-    startDateInput.value,
-    endDateInput.value,
-    timeDifference,
-    timeDimension.value
-  );
+export const calculateWeekendsDifference = (startDate, endDate) => {
+  let weekends = 0;
+  let currentDate = new Date(startDate);
 
-  displayStorageResults();
+  while (currentDate < endDate) {
+    if (isWeekend(currentDate)) {
+      weekends++;
+    }
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return weekends * 24 * 60 * 60 * 1000;
+};
+
+export const calculateDefaultDifference = (startDate, endDate) => {
+  return endDate - startDate;
 };
