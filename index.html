@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Document</title>
+    <script
+      type="module"
+      src="./js/main.js"
+      defer
+    ></script>
+    <link
+      rel="stylesheet"
+      href="style.css"
+    />
+  </head>
+  <body>
+    <!-- Вкладки -->
+    <div class="tabs">
+      <div id="first__tab">Calculate Date</div>
+      <div id="second__tab">Get Holidays</div>
+    </div>
+    <!--Перший таб-->
+    <div class="date">
+      <div class="date__container">
+        <form class="date__form">
+          <div class="date__inputs">
+            <h2>Choose Start date</h2>
+            <input
+              type="date"
+              class="start-date"
+            />
+            <h2>Choose End date</h2>
+            <input
+              type="date"
+              class="end-date"
+              disabled
+            />
+          </div>
+          <div class="option__preset">
+            <h2>Choose a preset</h2>
+            <button
+              class="preset__week"
+              type="button"
+            >
+              week
+            </button>
+            <button
+              class="preset__month"
+              type="button"
+            >
+              month
+            </button>
+          </div>
+          <div class="date__options">
+            <div class="option__days">
+              <select
+                name=""
+                id="days__dimension"
+              >
+                <option value="all-days">All days</option>
+                <option value="working-days">Weekdays</option>
+                <option value="weekends">Weekends</option>
+              </select>
+            </div>
+            <div class="option__time">
+              <select
+                name=""
+                id="time__dimension"
+              >
+                <option value="days">Calculate the number of days</option>
+                <option value="hours">Calculate the number of hours</option>
+                <option value="minutes">Calculate the number of minutes</option>
+                <option value="seconds">Calculate the number of seconds</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <button
+              class="date__button"
+              type="submit"
+            >
+              Calculate the date
+            </button>
+          </div>
+          <div class="date__result"></div>
+        </form>
+      </div>
+      <div class="stored-results">
+        <table>
+          <thead>
+            <tr>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Result</th>
+            </tr>
+          </thead>
+          <tbody id="results-body"></tbody>
+        </table>
+      </div>
+    </div>
+    <!--Другий таб-->
+    <div
+      class="countries"
+      hidden
+    >
+      <div class="option__dates">
+        <div>
+          <label for="countries__select">Choosing the country:</label>
+          <select id="countries__select">
+            <option value="">Choose a country</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="year__select">Choosing the year</label>
+          <select id="year__select">
+            <option value="">Choose a year</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="holiday__button">Get Holidays</button>
+
+      <table id="holidays-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Name Holiday</th>
+            <th>
+              <button id="sort-holidays">Sort</button>
+            </th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div id="error-message"></div>
+
+      <script>
+        const API_KEY = 'NB32rWoHbmHF87yn0SdEGSLhiLQfxib7	'
+        const API_URL = 'https://calendarific.com/api/v2/'
+
+        const countriesSelect = document.getElementById('countries__select')
+        const yearSelect = document.getElementById('year__select')
+        const holidaysTableBody = document.querySelector(
+          '#holidays-table tbody'
+        )
+        const errorMessageContainer = document.getElementById('error-message')
+        const getHolidaysButton = document.querySelector('.holiday__button')
+        const sortButton = document.getElementById('sort-holidays')
+
+        async function getCountries() {
+          try {
+            const response = await fetch(
+              `${API_URL}countries?api_key=${API_KEY}`
+            )
+            const data = await response.json()
+            return data.response.countries
+          } catch (error) {
+            throw error
+          }
+        }
+
+        async function getHolidays(country, year) {
+          try {
+            const response = await fetch(
+              `${API_URL}holidays?api_key=${API_KEY}&country=${country}&year=${year}`
+            )
+            const data = await response.json()
+            return data.response.holidays
+          } catch (error) {
+            throw error
+          }
+        }
+
+        async function populateCountriesDropdown() {
+          try {
+            const countries = await getCountries()
+            countries.forEach((country) => {
+              let countryOption = document.createElement('option')
+              countryOption.textContent = country.country_name
+              countryOption.value = country['iso-3166']
+              countriesSelect.append(countryOption)
+            })
+          } catch (error) {
+            displayErrorMessage('Error! Unable to get countries.')
+          }
+        }
+
+        function populateYearsDropdown() {
+          for (let year = 2001; year <= 2049; year++) {
+            const option = document.createElement('option')
+            option.value = year
+            option.text = year
+            yearSelect.add(option)
+          }
+        }
+
+        async function getAndDisplayHolidays() {
+          const selectedCountry = countriesSelect.value
+          const selectedYear = yearSelect.value
+
+          if (!selectedCountry || !selectedYear) {
+            displayErrorMessage('Select country and year!')
+            // Clear holidays data
+            holidaysTableBody.innerHTML = ''
+            return
+          }
+
+          // Reset error message container
+          errorMessageContainer.textContent = ''
+          errorMessageContainer.style.display = 'none'
+
+          holidaysTableBody.innerHTML = ''
+
+          try {
+            const holidays = await getHolidays(selectedCountry, selectedYear)
+            displayHolidays(holidays)
+          } catch (error) {
+            displayErrorMessage('Error! Unable to get holidays.')
+          }
+        }
+
+        function displayHolidays(holidays) {
+          holidays.forEach((holiday) => {
+            const row = holidaysTableBody.insertRow()
+            const dateCell = row.insertCell(0)
+            const nameCell = row.insertCell(1)
+
+            dateCell.textContent =
+              holiday.date.iso || holiday.date.date || holiday.date
+            nameCell.textContent = holiday.name
+          })
+        }
+
+        function displayErrorMessage(message) {
+          errorMessageContainer.textContent = message
+          errorMessageContainer.style.display = 'block'
+
+        }
+
+        let ascendingOrder = true
+
+        function sortHolidays() {
+          const tableBody = document.querySelector('#holidays-table tbody')
+          const rows = Array.from(tableBody.querySelectorAll('tr'))
+
+          rows.sort((row1, row2) => {
+            const date1 = new Date(row1.cells[0].textContent)
+            const date2 = new Date(row2.cells[0].textContent)
+
+            return ascendingOrder ? date1 - date2 : date2 - date1
+          })
+
+          tableBody.innerHTML = ''
+
+          rows.forEach((row) => {
+            tableBody.appendChild(row)
+          })
+
+          ascendingOrder = !ascendingOrder
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+          await populateCountriesDropdown()
+          populateYearsDropdown()
+          sortButton.addEventListener('click', sortHolidays)
+
+          getHolidaysButton.addEventListener('click', async () => {
+            await getAndDisplayHolidays()
+          })
+        })
+      </script>
+    </div>
+  </body>
+</html>

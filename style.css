@@ -1,0 +1,220 @@
+/*data css Start*/
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  font-size: 16px;
+  background-color: #f0f0f0;
+  margin: 0;
+}
+
+.tabs {
+  display: flex;
+  justify-content: space-around;
+  background-color: #333;
+  color: white;
+  padding: 10px;
+}
+
+#first__tab,
+#second__tab {
+  background-color: gray;
+  padding: 10px 20px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.date {
+  margin: 20px;
+}
+
+.date__container {
+  width: 100%;
+  max-width: 600px;
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(101, 99, 99, 0.1);
+  margin: 0 auto;
+}
+
+.date__form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.date__inputs,
+.option__preset,
+.date__options,
+.date__button {
+  margin-bottom: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.start-date,
+.end-date,
+.preset__week,
+.preset__month,
+#days__dimension,
+#time__dimension {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.date__button {
+  background-color: #3498db;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.date__button:hover {
+  background-color: #297fb8;
+}
+
+.stored-results table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.stored-results th,
+.stored-results td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.stored-results th {
+  background-color: rgb(221, 215, 215);
+}
+.stored-results {
+  max-width: 600px;
+  margin: 0 auto;
+}
+/* Responsive Styles */
+@media screen and (max-width: 600px) {
+  .tabs {
+    flex-direction: column;
+  }
+
+  #first__tab,
+  #second__tab {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .date__container {
+    padding: 10px;
+  }
+
+  .date__inputs,
+  .option__preset,
+  .date__options,
+  .date__button {
+    margin-bottom: 10px;
+  }
+}
+/*data css End*/
+
+/* countries css Start*/
+.countries {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.countries__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.countries label {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.countries select {
+  padding: 8px;
+  margin-bottom: 15px;
+  width: 200px;
+}
+
+.countries button {
+  color: white;
+  padding: 10px 15px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.holiday__button {
+  background-color: #3498db;
+  color: #fff;
+  padding: 12px 18px;
+  font-size: 16px;
+  border: 1px solid #297fb8;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.holiday__button:hover {
+  background-color: #297fb8;
+}
+
+#sort-holidays {
+  background-color: rgb(255, 255, 135);
+  color: black;
+  padding: 12px 18px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#sort-holidays:hover {
+  background-color: #ffd700;
+}
+
+#holidays-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  text-align: center;
+}
+
+#holidays-table th,
+#holidays-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+}
+
+#holidays-table th {
+  background-color: rgb(221, 215, 215);
+}
+
+#error-message {
+  display: none;
+  color: #d9534f;
+  background-color: #f2dede; 
+  border: 1px solid #d9534f; 
+  padding: 10px; 
+  border-radius: 5px; 
+  margin-top: 10px; 
+  text-align: center;
+  animation: fadeOut 3s ease-in-out;
+}
+
+/* countries css End*/
